@@ -27,5 +27,9 @@ export const countSentenceLengths = (text: string) => {
         if (wordCount >= 101 )sentenceCounts['101+ words']++
     })
 
-    return sentenceCounts;
+    const asPercent: Record<string, number> = {}
+
+    Object.entries(sentenceCounts).forEach(([key, value]) => {asPercent[key] = value/sentences.length * 100})
+
+    return asPercent;
 }
