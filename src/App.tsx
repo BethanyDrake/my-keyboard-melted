@@ -4,6 +4,7 @@ import { splitIntoSentences } from './splitIntoSentences'
 import { countWords } from './countWords'
 import {mostUsedWords} from './mostUsedWords'
 import {commonWords} from './commonWords'
+import {SentenceLengthHistogram } from './SentenceLengthHistogram'
 
 function App() {
   const [text, setText] = useState('')
@@ -12,7 +13,7 @@ function App() {
     const [overusedWords, setOverusedWords] = useState<{ word: string; occurences: number; }[]>([])
     const [totalWords, setTotolWords] = useState<number | null>(null)
   
-    const getLongestSentence = () => {
+    const analyseSentenceLengths = () => {
       setLongestSentences(splitIntoSentences(text)
         .sort((A, B) => countWords(B) - countWords(A))
         .slice(0, 5))
@@ -21,8 +22,7 @@ function App() {
     const getMostUsedWords = () => {
       setOverusedWords(mostUsedWords(text).filter(({word}) => !commonWords.includes(word)).slice(0,20))
     }
-  
-  
+
     return (
       <div>
         <header>
@@ -42,7 +42,7 @@ function App() {
   
   <div className="row">
         <button onClick={() => setTotolWords(countWords(text))}>Word count?</button>
-        <button onClick={() => getLongestSentence()}>Rambling sentences?</button>
+        <button onClick={() => analyseSentenceLengths()}>Rambling sentences?</button>
         <button onClick={() => getMostUsedWords()}>Overused words?</button>
    
         
@@ -61,6 +61,7 @@ function App() {
         }
 
         {longestSentences.length > 0 && 
+        <>
         <section>
         <h2>
           Top 5 Longest Sentences:
@@ -70,6 +71,15 @@ function App() {
         {longestSentences.map((item) => <li><b>({countWords(item)} words)</b> {item}</li>)}
         </ol>
         </section>
+           <section>
+           <h2>
+             Sentence lengths
+           </h2>
+   
+           <SentenceLengthHistogram text={text}/>
+           
+           </section>
+           </>
         }
 
 {overusedWords.length > 0 && 
